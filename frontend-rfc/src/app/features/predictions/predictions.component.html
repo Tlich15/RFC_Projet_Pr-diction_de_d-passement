@@ -1,0 +1,152 @@
+<div class="page">
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn btn-secondary" (click)="goBackToClients()">
+        ← Retour aux Clients
+      </button>
+      <h2>
+        📈 Prédictions
+        <span *ngIf="client" class="client-filter">pour {{ client }}</span>
+      </h2>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="fetch()" [disabled]="loading">
+        <span *ngIf="loading">Chargement...</span>
+        <span *ngIf="!loading">🔄 Rafraîchir</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearch()"
+        placeholder="🔍 Rechercher par client..."
+        class="search-input"
+      >
+      <span class="search-count">{{ filteredPredictions.length }} prédiction(s) trouvée(s)</span>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error" class="error-message">
+    <span>❌ {{ error }}</span>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <span>Chargement des prédictions...</span>
+  </div>
+
+  <!-- Predictions Table -->
+  <div *ngIf="!loading && paginatedPredictions?.length" class="table-container">
+    <table class="predictions-table">
+      <thead>
+        <tr>
+          <th width="60">N°</th>
+          <th>Client</th>
+          <th>Début Contrat</th>
+          <th>Mois+1</th>
+          <th>Mois+2</th>
+          <th>Prédiction Linéaire 1</th>
+          <th>Prédiction Linéaire 2</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pred of paginatedPredictions; let i = index" class="prediction-row">
+          <td class="client-number">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+          <td class="client-name">{{ pred.Client || pred.client || '-' }}</td>
+          <td>{{ pred.Debut_Contrat ? (pred.Debut_Contrat | date:'dd/MM/yyyy') : '-' }}</td>
+          <td class="month-pred">{{ pred.Next_Mois_1 || '-' }}</td>
+          <td class="month-pred">{{ pred.Next_Mois_2 || '-' }}</td>
+          <td class="pred-value">{{ pred.Lin_Pred_1 || '-' }}</td>
+          <td class="pred-value">{{ pred.Lin_Pred_2 || '-' }}</td>
+          <td class="actions">
+            <button class="btn btn-info btn-sm" (click)="selectClient(pred)">
+              📊 Historique
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button 
+        class="btn btn-secondary btn-sm" 
+        [disabled]="currentPage === 1"
+        (click)="previousPage()"
+      >
+        ← Précédent
+      </button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of getPageNumbers()" 
+          class="btn btn-sm"
+          [class.btn-primary]="page === currentPage"
+          [class.btn-secondary]="page !== currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button 
+        class="btn btn-secondary btn-sm" 
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Suivant →
+      </button>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!loading && !filteredPredictions?.length" class="no-results">
+    <span *ngIf="searchTerm">🔍 Aucune prédiction trouvée pour "{{ searchTerm }}"</span>
+    <span *ngIf="!searchTerm">📊 Aucune prédiction disponible</span>
+  </div>
+
+  <!-- Summary Stats -->
+  <div *ngIf="!loading && filteredPredictions?.length" class="summary-stats">
+    <div class="stat-card">
+      <h4>Total Prédictions</h4>
+      <span class="stat-value">{{ filteredPredictions.length }}</span>
+    </div>
+    <div class="stat-card">
+      <h4>Clients Actifs</h4>
+      <span class="stat-value">{{ uniqueClientsCount }}</span>
+    </div>
+    <div class="stat-card">
+      <h4>Page Actuelle</h4>
+      <span class="stat-value">{{ currentPage }} / {{ totalPages }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div *ngIf="showHistory" class="modal-overlay" (click)="closeHistory()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📊 Historique de {{ selectedClient?.Client || selectedClient?.client }}</h3>
+      <button class="btn btn-close" (click)="closeHistory()">×</button>
+    </div>
+    <div class="modal-body">
+      <img 
+        [src]="getHistoryUrl(selectedClient)" 
+        alt="Historique client"
+        class="history-image"
+        (error)="onImageError($event)"
+      >
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="closeHistory()">Fermer</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="page">
+  <h2>Status des données</h2>
+  <button (click)="refresh()" [disabled]="loading">Rafraîchir</button>
+  <button (click)="loadAll()" [disabled]="loadingLoad">Charger toutes les données</button>
+  <div *ngIf="message">{{ message }}</div>
+  <div *ngIf="loading">Chargement du statut...</div>
+  <table *ngIf="!loading && status?.length">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Existe</th>
+        <th>Chemin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of status">
+        <td>{{ s.name }}</td>
+        <td>{{ s.exists }}</td>
+        <td>{{ s.path || '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

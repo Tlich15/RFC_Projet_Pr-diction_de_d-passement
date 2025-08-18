@@ -168,3 +168,50 @@ def get_predictions() -> List[dict]:
             return df.fillna("").to_dict(orient="records")
 
     return []
+
+
+def get_client_history(client_name: str) -> List[dict]:
+    frames = load_all_datasets()
+    hist = frames.get("historical")
+    if hist is None or hist.empty:
+        return []
+    # normalize
+    df = hist.copy()
+    if "Client" in df.columns:
+        mask = df["Client"].astype(str).str.strip().str.lower() == client_name.strip().lower()
+        df = df.loc[mask]
+    else:
+        return []
+
+    if df.empty:
+        return []
+
+    # Ensure date is string ISO
+    if "Date_Mois" in df.columns:
+        try:
+            df["Date_Mois"] = pd.to_datetime(df["Date_Mois"]).dt.strftime("%Y-%m-%d")
+        except Exception:
+            df["Date_Mois"] = df["Date_Mois"].astype(str)
+
+    return df.fillna("").to_dict(orient="records")
+
+
+def get_client_predictions(client_name: str) -> List[dict]:
+    frames = load_all_datasets()
+    pred = frames.get("predictions")
+    if pred is None or pred.empty:
+        return []
+    df = pred.copy()
+    col = None
+    for candidate in ["Client", "client", "Nom_Client", "Name"]:
+        if candidate in df.columns:
+            col = candidate
+            break
+    if col is None:
+        return []
+
+    mask = df[col].astype(str).str.strip().str.lower() == client_name.strip().lower()
+    df = df.loc[mask]
+    if df.empty:
+        return []
+    return df.fillna("").to_dict(orient="records")

@@ -1,0 +1,18 @@
+<nav style="padding: 16px; background: linear-gradient(135deg, #0b3d91 0%, #1e4ba3 100%); color: white; display: flex; gap: 20px; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+  <img src="assets/rfc-logo.png" alt="RFC" style="height: 32px; filter: brightness(0) invert(1);" />
+  <span style="font-weight: 600; font-size: 18px;">RFC Dashboard</span>
+  <a routerLink="/clients" style="color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;" 
+     onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
+     onmouseout="this.style.background='transparent'">Clients</a>
+  <a routerLink="/predictions" style="color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;" 
+     onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
+     onmouseout="this.style.background='transparent'">Prédictions</a>
+  <span style="margin-left:auto;">
+    <a href="https://www.rfc.com.tn/" target="_blank" style="color: #fff; text-decoration: none; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; transition: all 0.3s;" 
+       onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
+       onmouseout="this.style.background='transparent'">Site RFC</a>
+  </span>
+</nav>
+<main style="padding: 24px; background: #f8f9fa; min-height: calc(100vh - 80px);">
+  <router-outlet></router-outlet>
+</main>

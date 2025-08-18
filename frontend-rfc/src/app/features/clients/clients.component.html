@@ -1,0 +1,138 @@
+<div class="page">
+  <div class="page-header">
+    <div class="header-left">
+      <h2>👥 Clients</h2>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="fetch()" [disabled]="loading">
+        <span *ngIf="loading">Chargement...</span>
+        <span *ngIf="!loading">🔄 Rafraîchir</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearch()"
+        placeholder="🔍 Rechercher un client..."
+        class="search-input"
+      >
+      <span class="search-count">{{ filteredClients.length }} client(s) trouvé(s)</span>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error" class="error-message">
+    <span>❌ {{ error }}</span>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <span>Chargement des clients...</span>
+  </div>
+
+  <!-- Clients Table -->
+  <div *ngIf="!loading && paginatedClients?.length" class="table-container">
+    <table class="clients-table">
+      <thead>
+        <tr>
+          <th width="60">N°</th>
+          <th>Nom du Client</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of paginatedClients; let i = index" class="client-row">
+          <td class="client-number">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+          <td class="client-name">{{ client.client_name || client.Client || '-' }}</td>
+          <td class="actions">
+            <button class="btn btn-info btn-sm" (click)="selectClient(client)">
+              📊 Historique
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button 
+        class="btn btn-secondary btn-sm" 
+        [disabled]="currentPage === 1"
+        (click)="previousPage()"
+      >
+        ← Précédent
+      </button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of getPageNumbers()" 
+          class="btn btn-sm"
+          [class.btn-primary]="page === currentPage"
+          [class.btn-secondary]="page !== currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button 
+        class="btn btn-secondary btn-sm" 
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Suivant →
+      </button>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!loading && !filteredClients?.length" class="no-results">
+    <span *ngIf="searchTerm">🔍 Aucun client trouvé pour "{{ searchTerm }}"</span>
+    <span *ngIf="!searchTerm">👥 Aucun client disponible</span>
+  </div>
+
+  <!-- Summary Stats -->
+  <div *ngIf="!loading && filteredClients?.length" class="summary-stats">
+    <div class="stat-card">
+      <h4>Total Clients</h4>
+      <span class="stat-value">{{ filteredClients.length }}</span>
+    </div>
+    <div class="stat-card">
+      <h4>Page Actuelle</h4>
+      <span class="stat-value">{{ currentPage }} / {{ totalPages }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div *ngIf="showHistory" class="modal-overlay" (click)="closeHistory()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📊 Historique de {{ selectedClient?.client_name || selectedClient?.Client }}</h3>
+      <button class="btn btn-close" (click)="closeHistory()">×</button>
+    </div>
+    <div class="modal-body">
+      <img 
+        [src]="getHistoryUrl(selectedClient)" 
+        alt="Historique client"
+        class="history-image"
+      >
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="closeHistory()">Fermer</button>
+      <a 
+        [routerLink]="['/predictions']" 
+        [queryParams]="{client: selectedClient?.client_name || selectedClient?.Client}"
+        class="btn btn-info"
+      >
+        Voir les Prédictions
+      </a>
+    </div>
+  </div>
+</div>
