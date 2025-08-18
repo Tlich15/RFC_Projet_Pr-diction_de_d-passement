@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# FastAPI runtime files
+uvicorn.out
+uvicorn.pid
+
+# Data files
+backend/data/*.xlsx
+backend/data/*.xls
+
+# Node/Angular
+node_modules/
+dist/
+.frontend-cache/
+.angular/
