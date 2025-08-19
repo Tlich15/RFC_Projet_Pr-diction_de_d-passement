@@ -112,11 +112,18 @@ npm start
 - **Documentation API** : http://localhost:8000/docs
 
 ### Quelques Images Sur Notre Application 
+<img width="1270" height="754" alt="Capture d’écran 2025-08-19 à 11 27 22 AM" src="https://github.com/user-attachments/assets/6bde57f0-5e58-4bfd-bbe7-69fc0b15d08f" />
+
 <img width="1436" height="715" alt="Capture d’écran 2025-08-19 à 10 24 56 AM" src="https://github.com/user-attachments/assets/d9ba01a4-6906-472f-8909-b78ff2d26745" />
+
 <img width="1436" height="699" alt="Capture d’écran 2025-08-19 à 11 17 48 AM" src="https://github.com/user-attachments/assets/2b8f460e-a37e-43b1-9112-51c29da1c60a" />
+
 <img width="1436" height="699" alt="Capture d’écran 2025-08-19 à 11 18 01 AM" src="https://github.com/user-attachments/assets/d59c3dc6-a486-4324-9bb4-0df668e469c0" />
+
 <img width="1436" height="693" alt="Capture d’écran 2025-08-19 à 11 18 21 AM" src="https://github.com/user-attachments/assets/0ef14a53-bc1f-4944-b41e-ed52b3640fdd" />
+
 <img width="1436" height="693" alt="Capture d’écran 2025-08-19 à 11 18 36 AM" src="https://github.com/user-attachments/assets/ec5d2783-9f03-4c3e-a05b-09a0c9d48b00" />
+
 <img width="1436" height="693" alt="Capture d’écran 2025-08-19 à 11 19 05 AM" src="https://github.com/user-attachments/assets/4e7c7df4-e6a0-42b7-87c9-d05d9a983fbf" />
 
 
